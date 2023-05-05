@@ -72,7 +72,7 @@ namespace TicTacToeConsole
                     GameState gameStateAfterMove = gameLogic.GameState;
 
                     bool userChoiceAboutFinishingSession;
-
+                    
                     switch (gameStateAfterMove)
                     {
                         case GameState.RUNNING:

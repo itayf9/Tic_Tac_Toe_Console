@@ -10,10 +10,8 @@ namespace TicTacToeConsole
     {
         public static void Main()
         {
-
-
-
-
+            GameController gameController = new GameController(); 
+            gameController.GameProcedure();
         }
     }
 }
