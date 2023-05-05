@@ -39,7 +39,8 @@
     <Compile Include="BoardSize.cs" />
     <Compile Include="Controller\GameController.cs" />
     <Compile Include="Model\BoardMark.cs" />
-    <Compile Include="Model\GameBoard.cs" />
+    <Compile Include="Model\GameLogic.cs" />
+    <Compile Include="Model\GameState.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\ConsoleGameInteraction.cs" />
@@ -48,6 +49,7 @@
     <Reference Include="Ex02.ConsoleUtils">
       <HintPath>..\..\..\..\..\..\Temp\Ex02.ConsoleUtils.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
