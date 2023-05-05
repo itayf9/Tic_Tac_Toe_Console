@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TicTacToeConsole.Utillity;
 
 namespace TicTacToeConsole.Model
 {
@@ -17,6 +18,22 @@ namespace TicTacToeConsole.Model
             this.m_Score = 0;
             this.m_Symbol = i_Symbol;
             this.m_IsMachine = i_IsMachine;
+        }
+
+        public BoardMark Symbol
+        {
+            get 
+            { 
+                 return m_Symbol; 
+            }
+        }
+
+        public int Score
+        {
+            get 
+            { 
+                 return m_Score; 
+            }
         }
     }
 }
