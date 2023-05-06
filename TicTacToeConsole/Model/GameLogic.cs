@@ -106,7 +106,7 @@ namespace TicTacToeConsole.Model
 
             checkGameState(i_Move, playerWithTheTurn);
 
-            this.m_Turn = m_Turn++ % 2;
+            this.m_Turn =  (m_Turn+1) % 2;
         }
 
         private GameState checkGameState(Point i_LastMoveOfUser, Player i_PlayerWithTheTurn)
