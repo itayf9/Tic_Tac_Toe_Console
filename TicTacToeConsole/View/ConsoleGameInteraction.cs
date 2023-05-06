@@ -9,7 +9,7 @@ namespace TicTacToeConsole.View
     public class ConsoleGameInteraction
     {
 
-        public static void PrintGameBoard(BoardMark[,] i_GameBoard, int i_Turn, int i_FirstPlayerScore, int i_SecondPlayerScore)
+        public static void PrintGameBoard(BoardMark[,] i_GameBoard, int i_Turn)
         {
             int boardHightAndWidth = i_GameBoard.GetLength(0);
 
@@ -42,9 +42,13 @@ namespace TicTacToeConsole.View
 
             Screen.Clear();
             Console.WriteLine(boardPrintBuilder.ToString());
-
             string playerNameThatHasTheTurn = i_Turn == 0 ? "Player 1 (X)" : "Player 2 (O)";
             Console.WriteLine("\nTurn Of: " + playerNameThatHasTheTurn);
+        }
+
+        public static void PrintGameScore(int i_FirstPlayerScore, int i_SecondPlayerScore) 
+        {
+            
             Console.WriteLine("Score: Player 1 (X) : " + i_FirstPlayerScore);
             Console.WriteLine("       Player 2 (O) : " + i_SecondPlayerScore);
         }
@@ -159,7 +163,7 @@ namespace TicTacToeConsole.View
         {
             bool isValidMove = false;
 
-            Console.WriteLine("Please enter two numbers representing your next move.");
+            Console.WriteLine("\nPlease enter two numbers representing your next move.");
             Console.WriteLine("The first number is your y-axis, and the second is your x-axis.");
             Console.WriteLine("e.g assume you want to select point (1,2), please enter \"1 2\"");
 
@@ -205,8 +209,7 @@ namespace TicTacToeConsole.View
                     Console.WriteLine("Game Over! winner is Player 2 !!");
                     break;         
             }
-            Console.WriteLine("Score: Player 1 (X) : " + i_FirstPlayerScore);
-            Console.WriteLine("       Player 2 (O) : " + i_SecondPlayerScore);
+            PrintGameScore(i_FirstPlayerScore, i_SecondPlayerScore);
 
             Console.WriteLine("\nDo you want to start another game or end this game session?");
             Console.WriteLine("Enter 'Y' for Yes, 'N' for No: ");
@@ -223,7 +226,7 @@ namespace TicTacToeConsole.View
 
             }
 
-            return userAnswerToYesOrNoQuestion == "Y";
+            return userAnswerToYesOrNoQuestion == "N";
         }
 
         public static void DisplayInvalidMoveMessage()

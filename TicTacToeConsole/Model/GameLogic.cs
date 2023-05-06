@@ -104,19 +104,19 @@ namespace TicTacToeConsole.Model
             GameBoard[i_Move.Y, i_Move.X] = playerWithTheTurn.Symbol;
             m_CountOfMarkedCells++;
 
-            checkGameState(i_Move, playerWithTheTurn);
+            checkAndUpdateGameState(i_Move, playerWithTheTurn);
 
             this.m_Turn =  (m_Turn+1) % 2;
         }
 
-        private GameState checkGameState(Point i_LastMoveOfUser, Player i_PlayerWithTheTurn)
+        private void checkAndUpdateGameState(Point i_LastMoveOfUser, Player i_PlayerWithTheTurn)
         {
             int gameBoardHightAndWidth = this.m_GameBoard.GetLength(0);
             int countOfMarksPlayer = 0;
             int maxSequentialSymbolCount = 0;
             GameState currentGameState;
 
-            for (int col=0; col < gameBoardHightAndWidth; col++)
+            for (int col = 0; col < gameBoardHightAndWidth; col++)
             {
                 if (m_GameBoard[i_LastMoveOfUser.Y, col] == i_PlayerWithTheTurn.Symbol)
                 {
@@ -159,25 +159,23 @@ namespace TicTacToeConsole.Model
             {
                 if (i_PlayerWithTheTurn.Symbol == BoardMark.PlayerX)
                 {
-                    currentGameState = GameState.FinishedP2;
+                    m_GameState = GameState.FinishedP2;
                     m_Players[1].Score++;
                 }
                 else
                 {
-                    currentGameState = GameState.FinishedP1;
+                    m_GameState = GameState.FinishedP1;
                     m_Players[0].Score++;
                 }
             }
             else if (m_CountOfMarkedCells == Math.Pow(gameBoardHightAndWidth, 2))
             {
-                currentGameState = GameState.FinishedTie;
+                m_GameState = GameState.FinishedTie;
             }
             else 
             {
-                currentGameState = GameState.Running;
+                m_GameState = GameState.Running;
             }
-
-            return currentGameState;
         }
 
         public void ResetGameBoard()

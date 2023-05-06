@@ -48,7 +48,8 @@ namespace TicTacToeConsole
                 {
                     int scoreOfFirstPlayer = gameLogic.GetScoreOfPlayer(0);
                     int scoreOfsecondPlayer = gameLogic.GetScoreOfPlayer(1);
-                    ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn, scoreOfFirstPlayer, scoreOfsecondPlayer);
+                    ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
+                    ConsoleGameInteraction.PrintGameScore(scoreOfFirstPlayer, scoreOfsecondPlayer);
 
                     Point move;
                     if (gameLogic.Turn == 0 || !gameLogic.IsGameAgainstMachine) 
@@ -71,36 +72,19 @@ namespace TicTacToeConsole
                     GameState gameStateAfterMove = gameLogic.GameState;
 
                     bool userChoiceAboutFinishingSession;
-                    
-                    switch (gameStateAfterMove)
+
+
+                    if (gameStateAfterMove != GameState.Running)
                     {
-                        case GameState.Running:
-                            continue;
-                        case GameState.FinishedTie:
-                            isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedTie, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
-                            if (userChoiceAboutFinishingSession == true)
-                            {
-                                isSessionOver = true;
-                            }
-                        break;
-                        case GameState.FinishedP1:
-                            isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedP1, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
-                            if (userChoiceAboutFinishingSession == true)
-                            {
-                                isSessionOver = true;
-                            }
-                            break;
-                        case GameState.FinishedP2:
-                            isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedP2, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
-                            if (userChoiceAboutFinishingSession == true)
-                            {
-                                isSessionOver = true;
-                            }
-                            break;
+                        isGameOver = true;
+                        ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
+                        userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(gameStateAfterMove, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
+                        if (userChoiceAboutFinishingSession == true)
+                        {
+                            isSessionOver = true;
+                        }
                     }
+
                 }
             }
             gameLogic.ResetGameBoard(); 
