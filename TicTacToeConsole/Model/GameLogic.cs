@@ -22,6 +22,7 @@ namespace TicTacToeConsole.Model
             int boardSizeValue = (int)i_BoardSize;
             this.m_Players = new List<Player>(2);
             this.m_GameBoard = new BoardMark[boardSizeValue, boardSizeValue];
+            ResetGameBoard();
             this.m_IsGameAgainstMachine = i_IsGameAgainstMachine;
             this.m_CountOfMarkedCells = 0;
         }
@@ -70,7 +71,7 @@ namespace TicTacToeConsole.Model
 
         public bool IsValidMove(Point i_Move)
         {
-            return m_GameBoard[i_Move.Y, i_Move.X] == BoardMark.EMPTY_CELL;
+            return m_GameBoard[i_Move.Y, i_Move.X] == BoardMark.EmptyCell;
         }
 
         public Point GenerateMachineMove()
@@ -98,7 +99,7 @@ namespace TicTacToeConsole.Model
 
         public void ApplyMove(Point i_Move)
         {
-            Player playerWithTheTurn = m_Players[Turn];
+            Player playerWithTheTurn = m_Players[this.Turn];
 
             GameBoard[i_Move.Y, i_Move.X] = playerWithTheTurn.Symbol;
             m_CountOfMarkedCells++;
@@ -145,33 +146,35 @@ namespace TicTacToeConsole.Model
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             countOfMarksPlayer = 0;
-            for (int i = 0, j = gameBoardHightAndWidth; i < gameBoardHightAndWidth; i++, j--)
+            for (int i = 0, j = gameBoardHightAndWidth - 1; i < gameBoardHightAndWidth; i++, j--)
             {
                 if (m_GameBoard[i, j] == i_PlayerWithTheTurn.Symbol)
                 {
                     countOfMarksPlayer++;
-                }
+                } 
             }
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             if (maxSequentialSymbolCount == gameBoardHightAndWidth)
             {
-                if (i_PlayerWithTheTurn.Symbol == BoardMark.PLAYER_X)
+                if (i_PlayerWithTheTurn.Symbol == BoardMark.PlayerX)
                 {
-                    currentGameState = GameState.FINISHED_P2;
+                    currentGameState = GameState.FinishedP2;
+                    m_Players[1].Score++;
                 }
                 else
                 {
-                    currentGameState = GameState.FINISHED_P1;
+                    currentGameState = GameState.FinishedP1;
+                    m_Players[0].Score++;
                 }
             }
             else if (m_CountOfMarkedCells == Math.Pow(gameBoardHightAndWidth, 2))
             {
-                currentGameState = GameState.FINISHED_TIE;
+                currentGameState = GameState.FinishedTie;
             }
             else 
             {
-                currentGameState = GameState.RUNNING;
+                currentGameState = GameState.Running;
             }
 
             return currentGameState;
@@ -183,9 +186,15 @@ namespace TicTacToeConsole.Model
             {
                 for (int j = 0; j < m_GameBoard.GetLength(1); j++) 
                 {
-                    m_GameBoard[i, j] = BoardMark.EMPTY_CELL;
+                    m_GameBoard[i, j] = BoardMark.EmptyCell;
                 }
             }
+        }
+
+        internal void InitAdversary(bool isGameModeAgainstMachine)
+        {
+            m_Players.Add(new Player(BoardMark.PlayerX, false));
+            m_Players.Add(new Player(BoardMark.PlayerO, isGameModeAgainstMachine));
         }
     }
 }

@@ -8,9 +8,6 @@ namespace TicTacToeConsole.Utillity
 {
     public enum BoardSize
     {
-        THREE = 3, FOUR= 4, FIVE =5, SIX= 6, SEVEN= 7, EIGHT=8, NINE=9
-
-
-
+        Three = 3, Four= 4, Five =5, Six= 6, Seven= 7, Eight=8, Nine=9
     }
 }

@@ -34,6 +34,10 @@ namespace TicTacToeConsole.Model
             { 
                  return m_Score; 
             }
+            set
+            {
+                m_Score = value;
+            }
         }
     }
 }

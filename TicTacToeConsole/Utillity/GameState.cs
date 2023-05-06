@@ -8,6 +8,8 @@ namespace TicTacToeConsole.Utillity
 {
     public enum GameState
     {
-        RUNNING, FINISHED_TIE, FINISHED_P1, FINISHED_P2,
+        Running, FinishedTie, FinishedP1, FinishedP2,
     }
 }
+
+

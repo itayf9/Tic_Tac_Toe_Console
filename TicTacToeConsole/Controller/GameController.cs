@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using TicTacToeConsole.Model;
 using TicTacToeConsole.Utillity;
 
@@ -25,15 +20,17 @@ namespace TicTacToeConsole
             {
                 ConsoleGameInteraction.ShowMenu();
                 MainMenuUserChoice mainMenuUserChoice = ConsoleGameInteraction.GetStartOrExitUserInput();
-                if (mainMenuUserChoice == MainMenuUserChoice.EXIT_PROGRAM) 
+                if (mainMenuUserChoice == MainMenuUserChoice.ExitProgram) 
                 {
                     isUserExited = true;
                     continue;
                 }
-                BoardSize boardSize = ConsoleGameInteraction.GetBoardSizeFromUserInput();
-                bool isGameModeAgainstMachine = ConsoleGameInteraction.GetGameModeFromUserInput();
-
+                BoardSize boardSize;
+                ConsoleGameInteraction.GetBoardSizeFromUserInput(out boardSize);
+                bool isGameModeAgainstMachine;
+                ConsoleGameInteraction.GetGameModeFromUserInput(out isGameModeAgainstMachine);
                 this.gameLogic = new GameLogic(boardSize, isGameModeAgainstMachine);
+                gameLogic.InitAdversary(isGameModeAgainstMachine);
                 startGameSession();
             }
         }
@@ -54,13 +51,15 @@ namespace TicTacToeConsole
                     ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn, scoreOfFirstPlayer, scoreOfsecondPlayer);
 
                     Point move;
-                    if (!gameLogic.IsGameAgainstMachine & gameLogic.Turn != 0) 
+                    if (gameLogic.Turn == 0 || !gameLogic.IsGameAgainstMachine) 
                     {
-                        move = ConsoleGameInteraction.ReadNextMove();
+                        move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoard.Length);
+                        move.X--;
+                        move.Y--;
                         while(!gameLogic.IsValidMove(move)) 
                         {
                             ConsoleGameInteraction.DisplayInvalidMoveMessage();
-                            move = ConsoleGameInteraction.ReadNextMove();
+                            move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoard.Length);
                         }
                     }
                     else
@@ -75,27 +74,27 @@ namespace TicTacToeConsole
                     
                     switch (gameStateAfterMove)
                     {
-                        case GameState.RUNNING:
+                        case GameState.Running:
                             continue;
-                        case GameState.FINISHED_TIE:
+                        case GameState.FinishedTie:
                             isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FINISHED_TIE);
+                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedTie, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
                             if (userChoiceAboutFinishingSession == true)
                             {
                                 isSessionOver = true;
                             }
                         break;
-                        case GameState.FINISHED_P1:
+                        case GameState.FinishedP1:
                             isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FINISHED_P1);
+                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedP1, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
                             if (userChoiceAboutFinishingSession == true)
                             {
                                 isSessionOver = true;
                             }
                             break;
-                        case GameState.FINISHED_P2:
+                        case GameState.FinishedP2:
                             isGameOver = true;
-                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FINISHED_P2);
+                            userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(GameState.FinishedP2, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
                             if (userChoiceAboutFinishingSession == true)
                             {
                                 isSessionOver = true;
