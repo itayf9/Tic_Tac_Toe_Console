@@ -30,7 +30,7 @@ namespace TicTacToeConsole
                 bool isGameModeAgainstMachine;
                 ConsoleGameInteraction.GetGameModeFromUserInput(out isGameModeAgainstMachine);
                 this.gameLogic = new GameLogic(boardSize, isGameModeAgainstMachine);
-                gameLogic.InitAdversary(isGameModeAgainstMachine);
+                gameLogic.InitPlayers(isGameModeAgainstMachine);
                 startGameSession();
             }
         }
@@ -54,31 +54,41 @@ namespace TicTacToeConsole
                     Point move;
                     if (gameLogic.Turn == 0 || !gameLogic.IsGameAgainstMachine) 
                     {
-                        move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoard.Length);
+                        move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoardSize, ref isSessionOver);
+                        if (move == new Point(-1, -1)) 
+                        {
+                            break;
+                        }
                         move.X--;
                         move.Y--;
                         while(!gameLogic.IsValidMove(move)) 
                         {
+                            ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
+                            ConsoleGameInteraction.PrintGameScore(scoreOfFirstPlayer, scoreOfsecondPlayer);
                             ConsoleGameInteraction.DisplayInvalidMoveMessage();
-                            move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoard.Length);
+                            move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoardSize, ref isSessionOver);
+                            if (move == new Point(-1, -1))
+                            {
+                                break;
+                            }
+                            move.X--;
+                            move.Y--;
                         }
                     }
                     else
                     {
                         move = gameLogic.GenerateMachineMove();
-                    }
+                    } 
                     gameLogic.ApplyMove(move);
-
+                    
                     GameState gameStateAfterMove = gameLogic.GameState;
-
-                    bool userChoiceAboutFinishingSession;
 
 
                     if (gameStateAfterMove != GameState.Running)
                     {
                         isGameOver = true;
                         ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
-                        userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(gameStateAfterMove, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
+                        bool userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(gameStateAfterMove, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
                         if (userChoiceAboutFinishingSession == true)
                         {
                             isSessionOver = true;
@@ -86,8 +96,8 @@ namespace TicTacToeConsole
                     }
 
                 }
+                gameLogic.ResetGameBoard();
             }
-            gameLogic.ResetGameBoard(); 
         }
     }
 }

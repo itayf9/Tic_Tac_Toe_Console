@@ -11,6 +11,7 @@ namespace TicTacToeConsole.Model
     public class GameLogic
     {
         private BoardMark[,] m_GameBoard;
+        private int m_GameBoardSize;
         private List<Player> m_Players;
         private bool m_IsGameAgainstMachine;
         private int m_Turn;
@@ -19,12 +20,11 @@ namespace TicTacToeConsole.Model
 
         public GameLogic(BoardSize i_BoardSize, bool i_IsGameAgainstMachine)
         {
-            int boardSizeValue = (int)i_BoardSize;
+            this.m_GameBoardSize = (int)i_BoardSize;
             this.m_Players = new List<Player>(2);
-            this.m_GameBoard = new BoardMark[boardSizeValue, boardSizeValue];
+            this.m_GameBoard = new BoardMark[m_GameBoardSize, m_GameBoardSize];
             ResetGameBoard();
             this.m_IsGameAgainstMachine = i_IsGameAgainstMachine;
-            this.m_CountOfMarkedCells = 0;
         }
 
         public BoardMark[,] GameBoard {
@@ -56,6 +56,15 @@ namespace TicTacToeConsole.Model
             } 
         }
 
+        public int GameBoardSize
+        {
+            get 
+            { 
+                return m_GameBoardSize; 
+            }
+        }
+        
+
         public GameState GameState
         {
             get 
@@ -71,7 +80,19 @@ namespace TicTacToeConsole.Model
 
         public bool IsValidMove(Point i_Move)
         {
-            return m_GameBoard[i_Move.Y, i_Move.X] == BoardMark.EmptyCell;
+            bool isValidMove = true;
+
+            if (i_Move.X >= m_GameBoardSize || i_Move.X < 0 || 
+                i_Move.Y >= m_GameBoardSize || i_Move.Y < 0)
+            {
+                isValidMove = false;
+            }
+            else
+            {
+                isValidMove = m_GameBoard[i_Move.Y, i_Move.X] == BoardMark.EmptyCell;
+            }
+
+            return isValidMove;
         }
 
         public Point GenerateMachineMove()
@@ -82,8 +103,8 @@ namespace TicTacToeConsole.Model
 
             do
             {
-                int x = rand.Next(m_GameBoard.GetLength(0));
-                int y = rand.Next(m_GameBoard.GetLength(0));
+                int x = rand.Next(m_GameBoardSize);
+                int y = rand.Next(m_GameBoardSize);
 
                 machineMove = new Point(x, y);
 
@@ -111,10 +132,9 @@ namespace TicTacToeConsole.Model
 
         private void checkAndUpdateGameState(Point i_LastMoveOfUser, Player i_PlayerWithTheTurn)
         {
-            int gameBoardHightAndWidth = this.m_GameBoard.GetLength(0);
+            int gameBoardHightAndWidth = this.m_GameBoardSize;
             int countOfMarksPlayer = 0;
             int maxSequentialSymbolCount = 0;
-            GameState currentGameState;
 
             for (int col = 0; col < gameBoardHightAndWidth; col++)
             {
@@ -180,16 +200,18 @@ namespace TicTacToeConsole.Model
 
         public void ResetGameBoard()
         {
-            for (int i = 0; i < m_GameBoard.GetLength(0); i++) 
+            m_GameState = GameState.Running;
+            m_CountOfMarkedCells = 0;
+            for (int i = 0; i < m_GameBoardSize; i++) 
             {
-                for (int j = 0; j < m_GameBoard.GetLength(1); j++) 
+                for (int j = 0; j < m_GameBoardSize; j++) 
                 {
                     m_GameBoard[i, j] = BoardMark.EmptyCell;
                 }
             }
         }
 
-        internal void InitAdversary(bool isGameModeAgainstMachine)
+        internal void InitPlayers(bool isGameModeAgainstMachine)
         {
             m_Players.Add(new Player(BoardMark.PlayerX, false));
             m_Players.Add(new Player(BoardMark.PlayerO, isGameModeAgainstMachine));

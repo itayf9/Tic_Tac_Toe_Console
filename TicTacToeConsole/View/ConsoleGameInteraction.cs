@@ -61,14 +61,14 @@ namespace TicTacToeConsole.View
             while (!validInput)
             {
                 string userInput = Console.ReadLine();
-                if (int.TryParse(userInput, out int choice) && choice >= 1 && choice <= 7)
+                if (int.TryParse(userInput, out int choice) && choice >= 3 && choice <= 9)
                 {
                     o_BoardSize = (BoardSize)choice;
                     validInput = true;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input, please enter a number between 1 and 7.");
+                    Console.WriteLine("Invalid input, please enter a number between 3 and 9.");
                 }
             }
         }
@@ -159,25 +159,31 @@ namespace TicTacToeConsole.View
             Console.WriteLine(sb.ToString());
         }
 
-        public static Point ReadNextMove(int i_BoarderHightAndWidth)
+        public static Point ReadNextMove(int i_BoarderHightAndWidth, ref bool o_IsSessionOver)
         {
             bool isValidMove = false;
 
-            Console.WriteLine("\nPlease enter two numbers representing your next move.");
-            Console.WriteLine("The first number is your y-axis, and the second is your x-axis.");
-            Console.WriteLine("e.g assume you want to select point (1,2), please enter \"1 2\"");
+            Console.WriteLine("\nPlease enter two numbers separated by a space. (e.g -> 1 2)");
 
             string playerDesiredMove = Console.ReadLine();
             int x = 0 , y = 0;
             string[] playerDesiredSeperatedMove = playerDesiredMove.Trim().Split(' ');
-            isValidMove = playerDesiredSeperatedMove.Length == 2 &&
+            isValidMove = (playerDesiredSeperatedMove.Length == 2 &&
                     int.TryParse(playerDesiredSeperatedMove[0], out y) &&
                     int.TryParse(playerDesiredSeperatedMove[1], out x) &&
                     y >= 1 && y <= i_BoarderHightAndWidth &&
-                    x >= 1 && x <= i_BoarderHightAndWidth;
+                    x >= 1 && x <= i_BoarderHightAndWidth);
 
             while (!isValidMove)
             {
+                if (playerDesiredSeperatedMove.Length == 1 &&
+                    playerDesiredSeperatedMove[0].ToUpper() == "Q") 
+                {
+                    o_IsSessionOver = true;
+                    x = -1;y = -1;
+                    break;
+                }
+
                 Console.WriteLine("Invalid move input! Please enter two numbers separated by a space, each between 1 and the board size.");
                 playerDesiredMove = Console.ReadLine();
 
