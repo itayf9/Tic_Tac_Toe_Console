@@ -33,24 +33,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utillity\BoardSize.cs" />
+    <Compile Include="Utillity\eBoardSize.cs" />
     <Compile Include="Controller\GameController.cs" />
-    <Compile Include="Utillity\BoardMark.cs" />
+    <Compile Include="Utillity\eBoardMark.cs" />
     <Compile Include="Model\GameLogic.cs" />
-    <Compile Include="Utillity\GameState.cs" />
-    <Compile Include="Utillity\MainMenuUserChoice.cs" />
+    <Compile Include="Utillity\eGameState.cs" />
+    <Compile Include="Utillity\eMainMenuUserChoice.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\ConsoleGameInteraction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Ex02.ConsoleUtils">
-      <HintPath>..\..\..\..\..\..\Temp\Ex02.ConsoleUtils.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Temp\Ex02.ConsoleUtils.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

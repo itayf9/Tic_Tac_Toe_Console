@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using TicTacToeConsole.Utillity;
 
@@ -10,86 +7,86 @@ namespace TicTacToeConsole.Model
 {
     public class GameLogic
     {
-        private BoardMark[,] m_GameBoard;
+        private eBoardMark[,] m_GameBoard;
         private int m_GameBoardSize;
         private List<Player> m_Players;
         private bool m_IsGameAgainstMachine;
         private int m_Turn;
-        private GameState m_GameState;
+        private eGameState m_GameState;
         private int m_CountOfMarkedCells;
 
-        public GameLogic(BoardSize i_BoardSize, bool i_IsGameAgainstMachine)
+        public GameLogic(eBoardSize i_BoardSize, bool i_IsGameAgainstMachine)
         {
             this.m_GameBoardSize = (int)i_BoardSize;
             this.m_Players = new List<Player>(2);
-            this.m_GameBoard = new BoardMark[m_GameBoardSize, m_GameBoardSize];
+            initPlayers();
+            this.m_GameBoard = new eBoardMark[m_GameBoardSize, m_GameBoardSize];
             ResetGameBoard();
             this.m_IsGameAgainstMachine = i_IsGameAgainstMachine;
         }
 
-        public BoardMark[,] GameBoard {
-
+        public eBoardMark[,] GameBoard
+        {
             get
             {
                 return m_GameBoard;
             }
         }
 
-        public bool IsGameAgainstMachine    
-            { 
-            get 
-            { 
+        public bool IsGameAgainstMachine
+            {
+            get
+            {
                 return m_IsGameAgainstMachine;
-            } 
-            set 
-            { 
+            }
 
+            set
+            {
                 m_IsGameAgainstMachine = value;
             }
         }
 
         public int Turn
-        { 
-            get 
-            { 
-                return m_Turn; 
-            } 
+        {
+            get
+            {
+                return m_Turn;
+            }
         }
 
         public int GameBoardSize
         {
-            get 
-            { 
-                return m_GameBoardSize; 
+            get
+            {
+                return m_GameBoardSize;
             }
         }
-        
 
-        public GameState GameState
+        public eGameState GameState
         {
-            get 
-            { 
+            get
+            {
                 return m_GameState;
             }
         }
 
-        public int GetScoreOfPlayer(int i_Index)
+        public int GetScoreOfPlayer(int i_IndexOfPlayer)
         {
-            return m_Players[i_Index].Score;
+            return m_Players[i_IndexOfPlayer].Score;
         }
 
-        public bool IsValidMove(Point i_Move)
+        public bool IsValidMove(Point i_GameMove)
         {
             bool isValidMove = true;
 
-            if (i_Move.X >= m_GameBoardSize || i_Move.X < 0 || 
-                i_Move.Y >= m_GameBoardSize || i_Move.Y < 0)
+            if (i_GameMove.X >= m_GameBoardSize || i_GameMove.X < 0 ||
+                i_GameMove.Y >= m_GameBoardSize || i_GameMove.Y < 0)
             {
                 isValidMove = false;
             }
             else
             {
-                isValidMove = m_GameBoard[i_Move.Y, i_Move.X] == BoardMark.EmptyCell;
+                isValidMove = m_GameBoard[i_GameMove.Y, i_GameMove.X] == eBoardMark.EmptyCell;
             }
 
             return isValidMove;
@@ -97,37 +94,37 @@ namespace TicTacToeConsole.Model
 
         public Point GenerateMachineMove()
         {
-            bool validMove = false;
-            Random rand = new Random();
-            Point machineMove;
+            bool isValidMove = false;
+            Random randomGenerator = new Random();
+            Point machineGameMove;
 
             do
             {
-                int x = rand.Next(m_GameBoardSize);
-                int y = rand.Next(m_GameBoardSize);
+                int x = randomGenerator.Next(m_GameBoardSize);
+                int y = randomGenerator.Next(m_GameBoardSize);
 
-                machineMove = new Point(x, y);
+                machineGameMove = new Point(x, y);
 
-                if (IsValidMove(machineMove))
+                if (IsValidMove(machineGameMove))
                 {
-                    validMove = true;
+                    isValidMove = true;
                 }
             }
-            while (!validMove);
+            while (!isValidMove);
 
-            return machineMove;
+            return machineGameMove;
         }
 
-        public void ApplyMove(Point i_Move)
+        public void ApplyMove(Point i_GameMove)
         {
-            Player playerWithTheTurn = m_Players[this.Turn];
+            Player playerWithTheTurn = m_Players[m_Turn];
 
-            GameBoard[i_Move.Y, i_Move.X] = playerWithTheTurn.Symbol;
+            m_GameBoard[i_GameMove.Y, i_GameMove.X] = playerWithTheTurn.Symbol;
             m_CountOfMarkedCells++;
 
-            checkAndUpdateGameState(i_Move, playerWithTheTurn);
+            checkAndUpdateGameState(i_GameMove, playerWithTheTurn);
 
-            this.m_Turn =  (m_Turn+1) % 2;
+            this.m_Turn = (m_Turn + 1) % 2;
         }
 
         private void checkAndUpdateGameState(Point i_LastMoveOfUser, Player i_PlayerWithTheTurn)
@@ -143,16 +140,18 @@ namespace TicTacToeConsole.Model
                     countOfMarksPlayer++;
                 }
             }
+
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             countOfMarksPlayer = 0;
             for (int row = 0; row < gameBoardHightAndWidth; row++)
             {
-                if (m_GameBoard[row , i_LastMoveOfUser.X] == i_PlayerWithTheTurn.Symbol)
+                if (m_GameBoard[row, i_LastMoveOfUser.X] == i_PlayerWithTheTurn.Symbol)
                 {
                     countOfMarksPlayer++;
                 }
             }
+
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             countOfMarksPlayer = 0;
@@ -163,6 +162,7 @@ namespace TicTacToeConsole.Model
                     countOfMarksPlayer++;
                 }
             }
+
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             countOfMarksPlayer = 0;
@@ -171,50 +171,52 @@ namespace TicTacToeConsole.Model
                 if (m_GameBoard[i, j] == i_PlayerWithTheTurn.Symbol)
                 {
                     countOfMarksPlayer++;
-                } 
+                }
             }
+
             maxSequentialSymbolCount = Math.Max(maxSequentialSymbolCount, countOfMarksPlayer);
 
             if (maxSequentialSymbolCount == gameBoardHightAndWidth)
             {
-                if (i_PlayerWithTheTurn.Symbol == BoardMark.PlayerX)
+                if (i_PlayerWithTheTurn.Symbol == eBoardMark.PlayerX)
                 {
-                    m_GameState = GameState.FinishedP2;
+                    m_GameState = eGameState.FinishedP2;
                     m_Players[1].Score++;
                 }
                 else
                 {
-                    m_GameState = GameState.FinishedP1;
+                    m_GameState = eGameState.FinishedP1;
                     m_Players[0].Score++;
                 }
             }
             else if (m_CountOfMarkedCells == Math.Pow(gameBoardHightAndWidth, 2))
             {
-                m_GameState = GameState.FinishedTie;
+                m_GameState = eGameState.FinishedTie;
             }
-            else 
+            else
             {
-                m_GameState = GameState.Running;
+                m_GameState = eGameState.Running;
             }
         }
 
         public void ResetGameBoard()
         {
-            m_GameState = GameState.Running;
+            m_GameState = eGameState.Running;
             m_CountOfMarkedCells = 0;
-            for (int i = 0; i < m_GameBoardSize; i++) 
+
+            for (int i = 0; i < m_GameBoardSize; i++)
             {
-                for (int j = 0; j < m_GameBoardSize; j++) 
+                for (int j = 0; j < m_GameBoardSize; j++)
                 {
-                    m_GameBoard[i, j] = BoardMark.EmptyCell;
+                    m_GameBoard[i, j] = eBoardMark.EmptyCell;
                 }
             }
         }
 
-        internal void InitPlayers(bool isGameModeAgainstMachine)
+        public void initPlayers()
         {
-            m_Players.Add(new Player(BoardMark.PlayerX, false));
-            m_Players.Add(new Player(BoardMark.PlayerO, isGameModeAgainstMachine));
+            m_Players.Add(new Player(eBoardMark.PlayerX));
+            m_Players.Add(new Player(eBoardMark.PlayerO));
         }
     }
 }

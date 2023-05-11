@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TicTacToeConsole
+﻿namespace TicTacToeConsole
 {
     public class Program
     {
         public static void Main()
         {
-            GameController gameController = new GameController(); 
+            GameController gameController = new GameController();
             gameController.GameProcedure();
         }
     }

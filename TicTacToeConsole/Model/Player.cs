@@ -10,30 +10,29 @@ namespace TicTacToeConsole.Model
     public class Player
     {
         private int m_Score;
-        private BoardMark m_Symbol;
-        private bool m_IsMachine;
+        private eBoardMark m_Symbol;
 
-        public Player(BoardMark i_Symbol, bool i_IsMachine) 
+        public Player(eBoardMark i_Symbol)
         {
             this.m_Score = 0;
             this.m_Symbol = i_Symbol;
-            this.m_IsMachine = i_IsMachine;
         }
 
-        public BoardMark Symbol
+        public eBoardMark Symbol
         {
-            get 
-            { 
-                 return m_Symbol; 
+            get
+            {
+                 return m_Symbol;
             }
         }
 
         public int Score
         {
-            get 
-            { 
-                 return m_Score; 
+            get
+            {
+                 return m_Score;
             }
+
             set
             {
                 m_Score = value;

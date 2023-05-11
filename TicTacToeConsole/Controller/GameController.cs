@@ -4,39 +4,36 @@ using TicTacToeConsole.Utillity;
 
 using TicTacToeConsole.View;
 
-
 namespace TicTacToeConsole
 {
     public class GameController
     {
-        private GameLogic gameLogic;
+        private GameLogic m_GameLogic;
 
         public void GameProcedure()
         {
-
             bool isUserExited = false;
-        
+
             while (!isUserExited)
             {
                 ConsoleGameInteraction.ShowMenu();
-                MainMenuUserChoice mainMenuUserChoice = ConsoleGameInteraction.GetStartOrExitUserInput();
-                if (mainMenuUserChoice == MainMenuUserChoice.ExitProgram) 
+                eMainMenuUserChoice mainMenuUserChoice = ConsoleGameInteraction.GetStartOrExitUserInput();
+                if (mainMenuUserChoice == eMainMenuUserChoice.ExitProgram)
                 {
                     isUserExited = true;
                     continue;
                 }
-                BoardSize boardSize;
+
+                eBoardSize boardSize;
                 ConsoleGameInteraction.GetBoardSizeFromUserInput(out boardSize);
                 bool isGameModeAgainstMachine;
                 ConsoleGameInteraction.GetGameModeFromUserInput(out isGameModeAgainstMachine);
-                this.gameLogic = new GameLogic(boardSize, isGameModeAgainstMachine);
-                gameLogic.InitPlayers(isGameModeAgainstMachine);
+                this.m_GameLogic = new GameLogic(boardSize, isGameModeAgainstMachine);
                 startGameSession();
             }
         }
 
-
-        private void startGameSession() 
+        private void startGameSession()
         {
             bool isSessionOver = false;
 
@@ -44,59 +41,61 @@ namespace TicTacToeConsole
             {
                 bool isGameOver = false;
 
-                while (!isGameOver) 
+                while (!isGameOver)
                 {
-                    int scoreOfFirstPlayer = gameLogic.GetScoreOfPlayer(0);
-                    int scoreOfsecondPlayer = gameLogic.GetScoreOfPlayer(1);
-                    ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
+                    int scoreOfFirstPlayer = m_GameLogic.GetScoreOfPlayer(0);
+                    int scoreOfsecondPlayer = m_GameLogic.GetScoreOfPlayer(1);
+                    ConsoleGameInteraction.PrintGameBoard(m_GameLogic.GameBoard, m_GameLogic.Turn);
                     ConsoleGameInteraction.PrintGameScore(scoreOfFirstPlayer, scoreOfsecondPlayer);
 
-                    Point move;
-                    if (gameLogic.Turn == 0 || !gameLogic.IsGameAgainstMachine) 
+                    Point nextGameMove;
+                    if (m_GameLogic.Turn == 0 || !m_GameLogic.IsGameAgainstMachine)
                     {
-                        move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoardSize, ref isSessionOver);
-                        if (move == new Point(-1, -1)) 
+                        nextGameMove = ConsoleGameInteraction.ReadNextMove(m_GameLogic.GameBoardSize, ref isSessionOver);
+                        if (nextGameMove == new Point(-1, -1))
                         {
                             break;
                         }
-                        move.X--;
-                        move.Y--;
-                        while(!gameLogic.IsValidMove(move)) 
+
+                        nextGameMove.X--;
+                        nextGameMove.Y--;
+                        while (!m_GameLogic.IsValidMove(nextGameMove))
                         {
-                            ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
+                            ConsoleGameInteraction.PrintGameBoard(m_GameLogic.GameBoard, m_GameLogic.Turn);
                             ConsoleGameInteraction.PrintGameScore(scoreOfFirstPlayer, scoreOfsecondPlayer);
                             ConsoleGameInteraction.DisplayInvalidMoveMessage();
-                            move = ConsoleGameInteraction.ReadNextMove(gameLogic.GameBoardSize, ref isSessionOver);
-                            if (move == new Point(-1, -1))
+                            nextGameMove = ConsoleGameInteraction.ReadNextMove(m_GameLogic.GameBoardSize, ref isSessionOver);
+                            if (nextGameMove == new Point(-1, -1))
                             {
                                 break;
                             }
-                            move.X--;
-                            move.Y--;
+
+                            nextGameMove.X--;
+                            nextGameMove.Y--;
                         }
                     }
                     else
                     {
-                        move = gameLogic.GenerateMachineMove();
-                    } 
-                    gameLogic.ApplyMove(move);
-                    
-                    GameState gameStateAfterMove = gameLogic.GameState;
+                        nextGameMove = m_GameLogic.GenerateMachineMove();
+                    }
 
+                    m_GameLogic.ApplyMove(nextGameMove);
 
-                    if (gameStateAfterMove != GameState.Running)
+                    eGameState gameStateAfterMove = m_GameLogic.GameState;
+
+                    if (gameStateAfterMove != eGameState.Running)
                     {
                         isGameOver = true;
-                        ConsoleGameInteraction.PrintGameBoard(gameLogic.GameBoard, gameLogic.Turn);
-                        bool userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(gameStateAfterMove, gameLogic.GetScoreOfPlayer(0), gameLogic.GetScoreOfPlayer(1));
+                        ConsoleGameInteraction.PrintGameBoard(m_GameLogic.GameBoard, m_GameLogic.Turn);
+                        bool userChoiceAboutFinishingSession = ConsoleGameInteraction.PrintGameOverMesseageAndAskUserIfFinishSession(gameStateAfterMove, m_GameLogic.GetScoreOfPlayer(0), m_GameLogic.GetScoreOfPlayer(1));
                         if (userChoiceAboutFinishingSession == true)
                         {
                             isSessionOver = true;
                         }
                     }
-
                 }
-                gameLogic.ResetGameBoard();
+
+                m_GameLogic.ResetGameBoard();
             }
         }
     }
